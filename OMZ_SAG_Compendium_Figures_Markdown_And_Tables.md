@@ -1,31 +1,94 @@
----
-title: "OMZ Compendium Figures And Tables"
-author: "Julia Anstett"
-date: "2022-08-11"
-output: github_document
----
+OMZ Compendium Figures And Tables
+================
+Julia Anstett
+2022-08-11
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+First, we will import the libraries used to generate all figures for
+this paper
+
+``` r
+library(tidyverse)
 ```
 
+    ## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
 
-First, we will import the libraries used to generate all figures for this paper
-```{r }
-library(tidyverse)
+    ## v ggplot2 3.3.5     v purrr   0.3.4
+    ## v tibble  3.1.6     v dplyr   1.0.8
+    ## v tidyr   1.2.0     v stringr 1.4.0
+    ## v readr   2.1.2     v forcats 0.5.1
+
+    ## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+    ## x dplyr::filter() masks stats::filter()
+    ## x dplyr::lag()    masks stats::lag()
+
+``` r
 library(vegan)
+```
+
+    ## Loading required package: permute
+
+    ## Loading required package: lattice
+
+    ## This is vegan 2.5-7
+
+``` r
 library(dendextend)
+```
+
+    ## Registered S3 method overwritten by 'dendextend':
+    ##   method     from 
+    ##   rev.hclust vegan
+
+    ## 
+    ## ---------------------
+    ## Welcome to dendextend version 1.15.2
+    ## Type citation('dendextend') for how to cite the package.
+    ## 
+    ## Type browseVignettes(package = 'dendextend') for the package vignette.
+    ## The github page is: https://github.com/talgalili/dendextend/
+    ## 
+    ## Suggestions and bug-reports can be submitted at: https://github.com/talgalili/dendextend/issues
+    ## You may ask questions at stackoverflow, use the r and dendextend tags: 
+    ##   https://stackoverflow.com/questions/tagged/dendextend
+    ## 
+    ##  To suppress this message use:  suppressPackageStartupMessages(library(dendextend))
+    ## ---------------------
+
+    ## 
+    ## Attaching package: 'dendextend'
+
+    ## The following object is masked from 'package:permute':
+    ## 
+    ##     shuffle
+
+    ## The following object is masked from 'package:stats':
+    ## 
+    ##     cutree
+
+``` r
 library(sf)
+```
+
+    ## Linking to GEOS 3.9.1, GDAL 3.2.1, PROJ 7.2.1; sf_use_s2() is TRUE
+
+``` r
 library("rnaturalearth")
 library("rnaturalearthdata")
 library(egg)
-
 ```
 
+    ## Loading required package: gridExtra
+
+    ## 
+    ## Attaching package: 'gridExtra'
+
+    ## The following object is masked from 'package:dplyr':
+    ## 
+    ##     combine
 
 Next, we will import the data used to generate all files in this paper
 
-```{r}
+``` r
 #All figures use OMZ
 OMZ<-read.csv("Data/Update_Global_SAGs_Aug_05_2022_GTDB.csv", header = TRUE)
 
@@ -40,17 +103,15 @@ oxygen5<-read.csv("Data/woa18_all_o00mn5d.csv", header = TRUE)
 #For Figure 3
 CD_Hits<-read.csv("Data/CD-Hit_OTUS_July_05_2022.csv", header= TRUE)
 SSU_Seqs<-read.csv("Data/SSU_Seqs.csv", header = TRUE)
-
-
-
 ```
 
-###Figures
+\###Figures
 
 ## Figure 1B
 
 Here, I will make the map with the OMZ Counts
-```{r }
+
+``` r
 #First, we'll round up the Latitude and Longitide to the nearest degree
 OMZ<- OMZ %>% mutate(Round_Lat=round(OMZ$Lat))
 OMZ<- OMZ %>% mutate(Round_Long=round(OMZ$Long))
@@ -110,7 +171,11 @@ sites <- st_as_sf(sites, coords = c("Longitude", "Latitude"),
                   crs = 4326, agr = "constant")
 
 sf_use_s2(FALSE)
+```
 
+    ## Spherical geometry (s2) switched off
+
+``` r
 #mapWorld <- borders("world", colour="grey40", fill="grey40") # create a layer of borders
 mp <- ggplot() +
 
@@ -132,16 +197,19 @@ mp <- ggplot() +
   ylab("Latitude")
 
 mp
-
-ggsave("Outputs/FIG-1B-OMZ_Map.pdf",mp, width=15, height = 14, units = "in")
-
 ```
 
-## Figure 3A 
+![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+``` r
+ggsave("Outputs/FIG-1B-OMZ_Map.pdf",mp, width=15, height = 14, units = "in")
+```
+
+## Figure 3A
 
 This will produce the dendrogram and the clustering annotation bars.
 
-```{r }
+``` r
 #First, we need to convert the CD-Hit table to a readable and assign a cluster ID to each SSU sequence
 counter<-0
 start_ID<-0
@@ -335,13 +403,14 @@ par(mar = c(15,4,1,1))
 plot(dend1)
 colored_bars(colors = plot_colours, dend=dend1, sort_by_labels_order = FALSE)
 dev.off()
-
-
 ```
 
+    ## png 
+    ##   2
 
-##Figure 3B Dot Plot for anonymously sorted SSU Samples
-```{r }
+\##Figure 3B Dot Plot for anonymously sorted SSU Samples
+
+``` r
 #Since we've already clustered our data, we simply need the order the order from the clustering for the sites, the taxonomic labels, 
 #and the count data
 
@@ -418,17 +487,18 @@ p_SSU_h<- ggplot(SSU_plot, aes(x =Site, y = Taxonomy))+
   scale_size_continuous(breaks = c(25, 50, 75, 100, 125), range = c(3,15) )+
   labs(size="Number of SAGs")
 p_SSU_h
-
-ggsave("Outputs/FIG-3B_Dot_O2_Map_Colour_Aug_10_2022.pdf",p_SSU_h, width=20, height = 15, units = "in")
-
-
-
 ```
 
-##Figure 4 CheckM Completeness and Contamination Estimate Plots
-Here, we're going to plot panels A-F
+![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
-```{r}
+``` r
+ggsave("Outputs/FIG-3B_Dot_O2_Map_Colour_Aug_10_2022.pdf",p_SSU_h, width=20, height = 15, units = "in")
+```
+
+\##Figure 4 CheckM Completeness and Contamination Estimate Plots Here,
+we’re going to plot panels A-F
+
+``` r
 Tax_list_labs<-read.csv("Data/Tax_List_Labs_Sept_23_2021.csv", header = FALSE)
 
 for (i in 1: dim(OMZ)[1]){
@@ -486,7 +556,11 @@ All_Tax<-OMZ_CC +
   ylab("% Contamination")+
   xlab("% Completeness")
 All_Tax
+```
 
+![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
 All_Region<-OMZ_CC +
   geom_point(na.rm = TRUE, aes(fill=Region, size=Assembly_Length_MBP), shape =21, colour="black") +
   guides(fill = guide_legend(order=1,override.aes = list(size=5)))+
@@ -500,8 +574,11 @@ All_Region<-OMZ_CC +
   theme(axis.title.x=element_blank())
 
 All_Region
+```
 
+![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
 
+``` r
 All_Pheno<-OMZ_CC +
   geom_point(na.rm = TRUE, aes(fill=OMZ_Phenotype, size=Assembly_Length_MBP), shape =21, colour="black") +
   guides(fill = guide_legend(order=1,override.aes = list(size=5)))+
@@ -516,7 +593,11 @@ All_Pheno<-OMZ_CC +
   theme(axis.title.x=element_blank())
 
 All_Pheno
+```
 
+![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-6-3.png)<!-- -->
+
+``` r
 All_Oxy<-OMZ_CC +
   geom_point(na.rm = TRUE, aes(fill=O2._.uM., size=Assembly_Length_MBP), shape =21, colour="black") +
   scale_fill_gradientn(colours =revrainbow1, name="Oxygen Concentration (uM)")+
@@ -530,7 +611,11 @@ All_Oxy<-OMZ_CC +
   theme(axis.title.x=element_blank())
 
 All_Oxy
+```
 
+![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-6-4.png)<!-- -->
+
+``` r
 All_MDA_CC<-OMZ_CC +
   geom_point(na.rm = TRUE, aes(fill=WGA_Approach, size=Assembly_Length_MBP), shape =21, colour="black") +
   scale_fill_manual(values = c("MDA" = "#f4a582", "WGA-X"="#d1e5f0"), labels=c("L-MDA", "WGA-X"))+
@@ -544,8 +629,11 @@ All_MDA_CC<-OMZ_CC +
   xlab("% Completeness")
 
 All_MDA_CC
+```
 
+![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-6-5.png)<!-- -->
 
+``` r
 All_Depth_CC<-OMZ_CC +
   geom_point(na.rm = TRUE, aes(fill=Depth, size=Assembly_Length_MBP), shape =21, colour="black") +
   scale_fill_continuous(low="navy", high="lightblue", trans = 'reverse')+
@@ -560,19 +648,30 @@ All_Depth_CC<-OMZ_CC +
 
 
 All_Depth_CC
-
-arr1<-ggarrange (All_Region, All_Pheno,All_Depth_CC, All_Oxy,All_MDA_CC, All_Tax, nrow = 3)
-
-arr1
-
-ggsave("Outputs/FIG-4_All_CCs.pdf",arr1,
-       width=15, height = 14, units = "in")
-
-
 ```
 
-##Figure S2 CheckM Estimate Box Plots
-```{r}
+![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-6-6.png)<!-- -->
+
+``` r
+arr1<-ggarrange (All_Region, All_Pheno,All_Depth_CC, All_Oxy,All_MDA_CC, All_Tax, nrow = 3)
+```
+
+![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-6-7.png)<!-- -->
+
+``` r
+arr1
+```
+
+![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-6-8.png)<!-- -->
+
+``` r
+ggsave("Outputs/FIG-4_All_CCs.pdf",arr1,
+       width=15, height = 14, units = "in")
+```
+
+\##Figure S2 CheckM Estimate Box Plots
+
+``` r
 #Split Between MDA/WGA-X and make box plots for Completeness, Conamination, and Assembly Length
 
 MDA_Seq<-Seq_OMZ %>% filter (WGA_Approach=="MDA")
@@ -682,16 +781,18 @@ arr1<-ggarrange(p1_Comp_MDA + theme(panel.background = element_blank()),
                   axis.title.y = element_blank() ), 
           
           nrow=2)
-
-
-ggsave("Outputs/FIG-S2_MDA_Boxplots.pdf",
-       arr1,width=14, height = 8.5, units = "in")
-
 ```
 
-##Figure S3
-```{r}
+![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
+``` r
+ggsave("Outputs/FIG-S2_MDA_Boxplots.pdf",
+       arr1,width=14, height = 8.5, units = "in")
+```
+
+\##Figure S3
+
+``` r
 ####Breakdown CC plots
 OMZ_Region_CC<-OMZ_CC+facet_wrap(.~Region) + 
   geom_point(na.rm = TRUE, aes(fill=Plot_Taxa, size=Assembly_Length_MBP), shape =21, colour="black") +
@@ -704,14 +805,17 @@ OMZ_Region_CC<-OMZ_CC+facet_wrap(.~Region) +
   geom_vline(xintercept = 50)
   
 OMZ_Region_CC
-
-
-ggsave("Outputs/FIG-S3_Region_Tax_CC.pdf", OMZ_Region_CC, width=14, height = 8.5, units = "in")
-
 ```
 
-##Figure S4
-```{r}
+![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
+ggsave("Outputs/FIG-S3_Region_Tax_CC.pdf", OMZ_Region_CC, width=14, height = 8.5, units = "in")
+```
+
+\##Figure S4
+
+``` r
 OMZ_Taxa_CC<-OMZ_CC+facet_wrap(.~Plot_Taxa) + 
   geom_point(na.rm = TRUE, aes(fill=OMZ_Phenotype, size=Assembly_Length_MBP), shape =21, colour="black") +
   scale_fill_manual(values = c("Sulfidic_Bottom"="#bebada","AMZ"= "#8dd3c7", "Low_Oxygen_OMZ"="#fccde5", "Open_Ocean_OMZ" = "#ffffb3"))+
@@ -724,13 +828,17 @@ OMZ_Taxa_CC<-OMZ_CC+facet_wrap(.~Plot_Taxa) +
   geom_vline(xintercept = 50)
 
 OMZ_Taxa_CC
-
-ggsave("Outputs/FIG-S4_Tax_Pheno_CC.pdf", OMZ_Taxa_CC, width=14, height = 8.5, units = "in")
-
 ```
 
-##Figure S5
-```{r}
+![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+``` r
+ggsave("Outputs/FIG-S4_Tax_Pheno_CC.pdf", OMZ_Taxa_CC, width=14, height = 8.5, units = "in")
+```
+
+\##Figure S5
+
+``` r
 OMZ_Taxa_Oxy_CC<-OMZ_CC+facet_wrap(.~Plot_Taxa) + 
   geom_point(na.rm = TRUE, aes(fill=O2._.uM., size=Assembly_Length_MBP), shape =21, colour="black") +
   scale_fill_gradientn(colours =revrainbow1, name="Oxygen Concentration (uM)")+
@@ -743,13 +851,17 @@ OMZ_Taxa_Oxy_CC<-OMZ_CC+facet_wrap(.~Plot_Taxa) +
   geom_vline(xintercept = 50)
 
 OMZ_Taxa_Oxy_CC
-
-ggsave("Outputs/FIG-S5_Tax_Oxy_CC.pdf", OMZ_Taxa_Oxy_CC, width=14, height = 8.5, units = "in")
-
 ```
 
-##Figure S6
-```{r}
+![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+``` r
+ggsave("Outputs/FIG-S5_Tax_Oxy_CC.pdf", OMZ_Taxa_Oxy_CC, width=14, height = 8.5, units = "in")
+```
+
+\##Figure S6
+
+``` r
 OMZ_Taxa_Region_CC<-OMZ_CC+facet_wrap(.~Plot_Taxa) + 
   geom_point(na.rm = TRUE, aes(fill=Region, size=Assembly_Length_MBP), shape =21, colour="black") +
   guides(fill = guide_legend(order=1, override.aes = list(size=5)))+
@@ -761,17 +873,17 @@ OMZ_Taxa_Region_CC<-OMZ_CC+facet_wrap(.~Plot_Taxa) +
   geom_vline(xintercept = 50)
 
 OMZ_Taxa_Region_CC
-
-
-ggsave("Outputs/FIG-S6_Tax_Region_CC.pdf", OMZ_Taxa_Region_CC, width=14, height = 8.5, units = "in")
-
 ```
 
+![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
-###Tables
+``` r
+ggsave("Outputs/FIG-S6_Tax_Region_CC.pdf", OMZ_Taxa_Region_CC, width=14, height = 8.5, units = "in")
+```
 
-```{r}
+\###Tables
 
+``` r
 OMZ_Trim <- unique(OMZ %>% select(Region, Depth, Month, Year, Site_ID, Lat, Long))
 
 for (i in 1: dim (OMZ_Trim)[1]){
@@ -1005,7 +1117,4 @@ write_csv(OMZ_Counts, file= "Outputs/Table_For_Fig2_Summary_Table_Primary_Tax_Au
 write_csv(OMZ_Amps_t, file= "Outputs/Table_S2_Summary_Table_WGA_Approach_Aug_10_2022.csv")
 write.csv(OMZ_Class_Out, file = "Outputs/Table_S3_QA_QC_Summary_Aug_10_2022.csv")
 write.csv(Sort_Counts, file = "Outputs/Table_For_Fig2_Sorting_Counts_Aug_10_2022.csv")
-
-
-
 ```
