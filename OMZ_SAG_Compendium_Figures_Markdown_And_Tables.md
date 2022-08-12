@@ -1102,7 +1102,6 @@ OMZ_Amps[2,14]<-as.numeric(tally(OMZ%>% filter(Status =="Sequenced", Primary_Tax
                                                  Completeness>90, Contamination <5)))
 colnames(OMZ_Amps)[14]<-"Number of High QUality SAGs with  with WGS SSU"
 
-OMZ_Amps_t<-as.data.frame(t(OMZ_Amps))
 
 
 Sort_Counts<-c(tally(OMZ %>% filter (Sorting_Method=="DNA")),
@@ -1114,7 +1113,7 @@ names(Sort_Counts)<-c("DNA", "Pre-sort CHL", "CHL", "PHYCO")
 
 write_csv(OMZ_Trim, file  = "Outputs/Table_1_Summary_Table_Sites_Aug_10_2022.csv")
 write_csv(OMZ_Counts, file= "Outputs/Table_For_Fig2_Summary_Table_Primary_Tax_Aug_10_2022.csv")
-write_csv(OMZ_Amps_t, file= "Outputs/Table_S2_Summary_Table_WGA_Approach_Aug_10_2022.csv")
+write_csv(OMZ_Amps, file= "Outputs/Table_S2_Summary_Table_WGA_Approach_Aug_10_2022.csv")
 write.csv(OMZ_Class_Out, file = "Outputs/Table_S3_QA_QC_Summary_Aug_10_2022.csv")
 write.csv(Sort_Counts, file = "Outputs/Table_For_Fig2_Sorting_Counts_Aug_10_2022.csv")
 ```
