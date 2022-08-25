@@ -571,7 +571,7 @@ ggsave("Outputs/FIG-4_All_CCs.pdf",arr1,
 
 ```
 
-##Figure S2 CheckM Estimate Box Plots
+##Figure S4 CheckM Estimate Box Plots
 ```{r}
 #Split Between MDA/WGA-X and make box plots for Completeness, Conamination, and Assembly Length
 
@@ -684,12 +684,12 @@ arr1<-ggarrange(p1_Comp_MDA + theme(panel.background = element_blank()),
           nrow=2)
 
 
-ggsave("Outputs/FIG-S2_MDA_Boxplots.pdf",
+ggsave("Outputs/FIG-S4_MDA_Boxplots.pdf",
        arr1,width=14, height = 8.5, units = "in")
 
 ```
 
-##Figure S3
+##Figure S5
 ```{r}
 
 ####Breakdown CC plots
@@ -706,11 +706,11 @@ OMZ_Region_CC<-OMZ_CC+facet_wrap(.~Region) +
 OMZ_Region_CC
 
 
-ggsave("Outputs/FIG-S3_Region_Tax_CC.pdf", OMZ_Region_CC, width=14, height = 8.5, units = "in")
+ggsave("Outputs/FIG-S5_Region_Tax_CC.pdf", OMZ_Region_CC, width=14, height = 8.5, units = "in")
 
 ```
 
-##Figure S4
+##Figure S6
 ```{r}
 OMZ_Taxa_CC<-OMZ_CC+facet_wrap(.~Plot_Taxa) + 
   geom_point(na.rm = TRUE, aes(fill=OMZ_Phenotype, size=Assembly_Length_MBP), shape =21, colour="black") +
@@ -725,11 +725,11 @@ OMZ_Taxa_CC<-OMZ_CC+facet_wrap(.~Plot_Taxa) +
 
 OMZ_Taxa_CC
 
-ggsave("Outputs/FIG-S4_Tax_Pheno_CC.pdf", OMZ_Taxa_CC, width=14, height = 8.5, units = "in")
+ggsave("Outputs/FIG-S6_Tax_Pheno_CC.pdf", OMZ_Taxa_CC, width=14, height = 8.5, units = "in")
 
 ```
 
-##Figure S5
+##Figure S7
 ```{r}
 OMZ_Taxa_Oxy_CC<-OMZ_CC+facet_wrap(.~Plot_Taxa) + 
   geom_point(na.rm = TRUE, aes(fill=O2._.uM., size=Assembly_Length_MBP), shape =21, colour="black") +
@@ -744,11 +744,11 @@ OMZ_Taxa_Oxy_CC<-OMZ_CC+facet_wrap(.~Plot_Taxa) +
 
 OMZ_Taxa_Oxy_CC
 
-ggsave("Outputs/FIG-S5_Tax_Oxy_CC.pdf", OMZ_Taxa_Oxy_CC, width=14, height = 8.5, units = "in")
+ggsave("Outputs/FIG-S7_Tax_Oxy_CC.pdf", OMZ_Taxa_Oxy_CC, width=14, height = 8.5, units = "in")
 
 ```
 
-##Figure S6
+##Figure S8
 ```{r}
 OMZ_Taxa_Region_CC<-OMZ_CC+facet_wrap(.~Plot_Taxa) + 
   geom_point(na.rm = TRUE, aes(fill=Region, size=Assembly_Length_MBP), shape =21, colour="black") +
@@ -763,7 +763,7 @@ OMZ_Taxa_Region_CC<-OMZ_CC+facet_wrap(.~Plot_Taxa) +
 OMZ_Taxa_Region_CC
 
 
-ggsave("Outputs/FIG-S6_Tax_Region_CC.pdf", OMZ_Taxa_Region_CC, width=14, height = 8.5, units = "in")
+ggsave("Outputs/FIG-S8_Tax_Region_CC.pdf", OMZ_Taxa_Region_CC, width=14, height = 8.5, units = "in")
 
 ```
 
