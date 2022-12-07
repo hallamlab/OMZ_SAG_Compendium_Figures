@@ -1,7 +1,0 @@
-"","Count","Max Completeness","Min Completeness","Number of SAGs with Completeness >=50%","Number of SAGs with <5% Contamination","Number of SAGs >=5% and <=10% Contamination"
-"SAGs With GTDB Classifications",2838,98.79,0,1051,1051,6
-"SAGs With SILVA Classifications",3848,98.79,0,867,2326,6
-"SAGs With Both Classifications",2098,98.79,0,861,2065,6
-"SAGs With Only GTDB Classifications",740,59.69,0,6,261,0
-"SAGs With Only SILVA Classifications",1750,93.61,0,190,740,0
-"Unclassified SAGs",541,22.51,0,0,506,1
