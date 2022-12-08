@@ -1,7 +1,7 @@
 OMZ Compendium Figures And Tables
 ================
 Julia Anstett
-2022-08-11
+2022-12-07
 
 First, we will import the libraries used to generate all figures for
 this paper
@@ -10,26 +10,22 @@ this paper
 library(tidyverse)
 ```
 
-    ## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
-
-    ## v ggplot2 3.3.5     v purrr   0.3.4
-    ## v tibble  3.1.6     v dplyr   1.0.8
-    ## v tidyr   1.2.0     v stringr 1.4.0
-    ## v readr   2.1.2     v forcats 0.5.1
-
-    ## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
-    ## x dplyr::filter() masks stats::filter()
-    ## x dplyr::lag()    masks stats::lag()
+    ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+    ## ✔ ggplot2 3.3.6      ✔ purrr   0.3.4 
+    ## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
+    ## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
+    ## ✔ readr   2.1.2      ✔ forcats 0.5.2 
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
 
 ``` r
 library(vegan)
 ```
 
     ## Loading required package: permute
-
     ## Loading required package: lattice
-
-    ## This is vegan 2.5-7
+    ## This is vegan 2.6-4
 
 ``` r
 library(dendextend)
@@ -38,10 +34,9 @@ library(dendextend)
     ## Registered S3 method overwritten by 'dendextend':
     ##   method     from 
     ##   rev.hclust vegan
-
     ## 
     ## ---------------------
-    ## Welcome to dendextend version 1.15.2
+    ## Welcome to dendextend version 1.16.0
     ## Type citation('dendextend') for how to cite the package.
     ## 
     ## Type browseVignettes(package = 'dendextend') for the package vignette.
@@ -53,14 +48,14 @@ library(dendextend)
     ## 
     ##  To suppress this message use:  suppressPackageStartupMessages(library(dendextend))
     ## ---------------------
-
+    ## 
     ## 
     ## Attaching package: 'dendextend'
-
+    ## 
     ## The following object is masked from 'package:permute':
     ## 
     ##     shuffle
-
+    ## 
     ## The following object is masked from 'package:stats':
     ## 
     ##     cutree
@@ -69,7 +64,7 @@ library(dendextend)
 library(sf)
 ```
 
-    ## Linking to GEOS 3.9.1, GDAL 3.2.1, PROJ 7.2.1; sf_use_s2() is TRUE
+    ## Linking to GEOS 3.9.1, GDAL 3.4.3, PROJ 7.2.1; sf_use_s2() is TRUE
 
 ``` r
 library("rnaturalearth")
@@ -78,10 +73,9 @@ library(egg)
 ```
 
     ## Loading required package: gridExtra
-
     ## 
     ## Attaching package: 'gridExtra'
-
+    ## 
     ## The following object is masked from 'package:dplyr':
     ## 
     ##     combine
@@ -90,7 +84,7 @@ Next, we will import the data used to generate all files in this paper
 
 ``` r
 #All figures use OMZ
-OMZ<-read.csv("Data/Update_Global_SAGs_Aug_05_2022_GTDB.csv", header = TRUE)
+OMZ<-read.csv("Data/Update_Global_SAGs_Dec_07_2022_GTDB.csv", header = TRUE)
 
 #Figures 3, 4, S2-6 use the truncated Phylum labels for ploting
 Tax_list_labs<-read.csv("Data/Tax_List_Labs_Sept_23_2021.csv", header = FALSE)
@@ -317,7 +311,7 @@ for (i in 1:dim(OTU_Reps_Phylum)[1]){
   SSU_Seqs_Rep<-rbind(SSU_Seqs_Rep,tmp_SSU_Seqs_Rep)
 }
 
-write.csv(SSU_Seqs_Rep, "Outputs/SSU_Reps_August_10_2022.csv")
+write.csv(SSU_Seqs_Rep, "Outputs/SSU_Reps_Dec_07_2022.csv")
 SSU_wga_apporach_DNA_Only<-SSU_DNA_Only %>%  distinct(Site_ID, .keep_all = TRUE)
 
 SSU_Clusters<-unique(SSU_DNA_Only$Cluster_ID)
@@ -398,7 +392,7 @@ phenotype_colours<-replace(phenotype_colours, phenotype_colours=="Sulfidic_Botto
 
 plot_colours<-cbind(phenotype_colours, wga_colors)
 
-pdf("Outputs/FIG-3A_Dend_avg_Aug_10_2022.pdf", width = 15, height = 5)
+pdf("Outputs/FIG-3A_Dend_avg_Dec_07_2022.pdf", width = 15, height = 5)
 par(mar = c(15,4,1,1))
 plot(dend1)
 colored_bars(colors = plot_colours, dend=dend1, sort_by_labels_order = FALSE)
@@ -492,7 +486,7 @@ p_SSU_h
 ![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 ``` r
-ggsave("Outputs/FIG-3B_Dot_O2_Map_Colour_Aug_10_2022.pdf",p_SSU_h, width=20, height = 15, units = "in")
+ggsave("Outputs/FIG-3B_Dot_O2_Map_Colour_Dec_07_2022.pdf",p_SSU_h, width=20, height = 15, units = "in")
 ```
 
 \##Figure 4 CheckM Completeness and Contamination Estimate Plots Here,
@@ -669,7 +663,7 @@ ggsave("Outputs/FIG-4_All_CCs.pdf",arr1,
        width=15, height = 14, units = "in")
 ```
 
-\##Figure S2 CheckM Estimate Box Plots
+\##Figure S4 CheckM Estimate Box Plots
 
 ``` r
 #Split Between MDA/WGA-X and make box plots for Completeness, Conamination, and Assembly Length
@@ -786,11 +780,11 @@ arr1<-ggarrange(p1_Comp_MDA + theme(panel.background = element_blank()),
 ![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
-ggsave("Outputs/FIG-S2_MDA_Boxplots.pdf",
+ggsave("Outputs/FIG-S4_MDA_Boxplots.pdf",
        arr1,width=14, height = 8.5, units = "in")
 ```
 
-\##Figure S3
+\##Figure S5
 
 ``` r
 ####Breakdown CC plots
@@ -810,10 +804,10 @@ OMZ_Region_CC
 ![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
-ggsave("Outputs/FIG-S3_Region_Tax_CC.pdf", OMZ_Region_CC, width=14, height = 8.5, units = "in")
+ggsave("Outputs/FIG-S5_Region_Tax_CC.pdf", OMZ_Region_CC, width=14, height = 8.5, units = "in")
 ```
 
-\##Figure S4
+\##Figure S6
 
 ``` r
 OMZ_Taxa_CC<-OMZ_CC+facet_wrap(.~Plot_Taxa) + 
@@ -833,10 +827,10 @@ OMZ_Taxa_CC
 ![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 ``` r
-ggsave("Outputs/FIG-S4_Tax_Pheno_CC.pdf", OMZ_Taxa_CC, width=14, height = 8.5, units = "in")
+ggsave("Outputs/FIG-S6_Tax_Pheno_CC.pdf", OMZ_Taxa_CC, width=14, height = 8.5, units = "in")
 ```
 
-\##Figure S5
+\##Figure S7
 
 ``` r
 OMZ_Taxa_Oxy_CC<-OMZ_CC+facet_wrap(.~Plot_Taxa) + 
@@ -856,10 +850,10 @@ OMZ_Taxa_Oxy_CC
 ![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ``` r
-ggsave("Outputs/FIG-S5_Tax_Oxy_CC.pdf", OMZ_Taxa_Oxy_CC, width=14, height = 8.5, units = "in")
+ggsave("Outputs/FIG-S7_Tax_Oxy_CC.pdf", OMZ_Taxa_Oxy_CC, width=14, height = 8.5, units = "in")
 ```
 
-\##Figure S6
+\##Figure S8
 
 ``` r
 OMZ_Taxa_Region_CC<-OMZ_CC+facet_wrap(.~Plot_Taxa) + 
@@ -878,7 +872,7 @@ OMZ_Taxa_Region_CC
 ![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ``` r
-ggsave("Outputs/FIG-S6_Tax_Region_CC.pdf", OMZ_Taxa_Region_CC, width=14, height = 8.5, units = "in")
+ggsave("Outputs/FIG-S8_Tax_Region_CC.pdf", OMZ_Taxa_Region_CC, width=14, height = 8.5, units = "in")
 ```
 
 \###Tables
@@ -1111,9 +1105,9 @@ Sort_Counts<-c(tally(OMZ %>% filter (Sorting_Method=="DNA")),
 
 names(Sort_Counts)<-c("DNA", "Pre-sort CHL", "CHL", "PHYCO")
 
-write_csv(OMZ_Trim, file  = "Outputs/Table_1_Summary_Table_Sites_Aug_10_2022.csv")
-write_csv(OMZ_Counts, file= "Outputs/Table_For_Fig2_Summary_Table_Primary_Tax_Aug_10_2022.csv")
-write_csv(OMZ_Amps, file= "Outputs/Table_S2_Summary_Table_WGA_Approach_Aug_10_2022.csv")
-write.csv(OMZ_Class_Out, file = "Outputs/Table_S3_QA_QC_Summary_Aug_10_2022.csv")
-write.csv(Sort_Counts, file = "Outputs/Table_For_Fig2_Sorting_Counts_Aug_10_2022.csv")
+write_csv(OMZ_Trim, file  = "Outputs/Table_1_Summary_Table_Sites_Dec_07_2022.csv")
+write_csv(OMZ_Counts, file= "Outputs/Table_For_Fig2_Summary_Table_Primary_Tax_Dec_07_2022.csv")
+write_csv(OMZ_Amps, file= "Outputs/Table_S2_Summary_Table_WGA_Approach_Dec_07_2022.csv")
+write.csv(OMZ_Class_Out, file = "Outputs/Table_S3_QA_QC_Summary_Dec_07_2022.csv")
+write.csv(Sort_Counts, file = "Outputs/Table_For_Fig2_Sorting_Counts_Dec_07_2022.csv")
 ```
