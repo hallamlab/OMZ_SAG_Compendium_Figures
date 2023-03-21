@@ -1,7 +1,7 @@
 OMZ Compendium Figures And Tables
 ================
 Julia Anstett
-2022-12-07
+2023-03-21
 
 First, we will import the libraries used to generate all figures for
 this paper
@@ -11,10 +11,10 @@ library(tidyverse)
 ```
 
     ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-    ## ✔ ggplot2 3.3.6      ✔ purrr   0.3.4 
+    ## ✔ ggplot2 3.4.0      ✔ purrr   1.0.1 
     ## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
-    ## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
-    ## ✔ readr   2.1.2      ✔ forcats 0.5.2 
+    ## ✔ tidyr   1.2.1      ✔ stringr 1.5.0 
+    ## ✔ readr   2.1.3      ✔ forcats 0.5.2 
     ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
@@ -64,11 +64,21 @@ library(dendextend)
 library(sf)
 ```
 
-    ## Linking to GEOS 3.9.1, GDAL 3.4.3, PROJ 7.2.1; sf_use_s2() is TRUE
+    ## Linking to GEOS 3.9.3, GDAL 3.5.2, PROJ 8.2.1; sf_use_s2() is TRUE
 
 ``` r
 library("rnaturalearth")
 library("rnaturalearthdata")
+```
+
+    ## 
+    ## Attaching package: 'rnaturalearthdata'
+    ## 
+    ## The following object is masked from 'package:rnaturalearth':
+    ## 
+    ##     countries110
+
+``` r
 library(egg)
 ```
 
@@ -84,7 +94,7 @@ Next, we will import the data used to generate all files in this paper
 
 ``` r
 #All figures use OMZ
-OMZ<-read.csv("Data/Update_Global_SAGs_Dec_07_2022_GTDB.csv", header = TRUE)
+OMZ<-read.csv("Data/Update_Global_SAGs_Mar_21_2023_GTDB.csv", header = TRUE)
 
 #Figures 3, 4, S2-6 use the truncated Phylum labels for ploting
 Tax_list_labs<-read.csv("Data/Tax_List_Labs_Sept_23_2021.csv", header = FALSE)
@@ -311,7 +321,7 @@ for (i in 1:dim(OTU_Reps_Phylum)[1]){
   SSU_Seqs_Rep<-rbind(SSU_Seqs_Rep,tmp_SSU_Seqs_Rep)
 }
 
-write.csv(SSU_Seqs_Rep, "Outputs/SSU_Reps_Dec_07_2022.csv")
+write.csv(SSU_Seqs_Rep, "Outputs/SSU_Reps_Mar_21_2023.csv")
 SSU_wga_apporach_DNA_Only<-SSU_DNA_Only %>%  distinct(Site_ID, .keep_all = TRUE)
 
 SSU_Clusters<-unique(SSU_DNA_Only$Cluster_ID)
@@ -392,7 +402,7 @@ phenotype_colours<-replace(phenotype_colours, phenotype_colours=="Sulfidic_Botto
 
 plot_colours<-cbind(phenotype_colours, wga_colors)
 
-pdf("Outputs/FIG-3A_Dend_avg_Dec_07_2022.pdf", width = 15, height = 5)
+pdf("Outputs/FIG-3A_Dend_avg_Mar_21_2023.pdf", width = 15, height = 5)
 par(mar = c(15,4,1,1))
 plot(dend1)
 colored_bars(colors = plot_colours, dend=dend1, sort_by_labels_order = FALSE)
@@ -486,7 +496,7 @@ p_SSU_h
 ![](OMZ_SAG_Compendium_Figures_Markdown_And_Tables_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 ``` r
-ggsave("Outputs/FIG-3B_Dot_O2_Map_Colour_Dec_07_2022.pdf",p_SSU_h, width=20, height = 15, units = "in")
+ggsave("Outputs/FIG-3B_Dot_O2_Map_Colour_Mar_21_2023.pdf",p_SSU_h, width=20, height = 15, units = "in")
 ```
 
 \##Figure 4 CheckM Completeness and Contamination Estimate Plots Here,
@@ -1083,17 +1093,22 @@ colnames(OMZ_Amps)[12]<-"Number of  Medium QUality and Above SAGs with WGS SSU"
 
 
 OMZ_Amps[1,13]<-as.numeric(tally(OMZ%>% filter(Status=="Sequenced", Primary_Tax_Method=="16S", WGA_Approach=="MDA", 
-                                                Completeness>90, Contamination <5)))
+                                                Completeness>90, Contamination <5, 
+                                                WGS_5S!=0, WGS_16S!=0, WGS_23S!=0, WGS_tRNA>=18)))
 
 OMZ_Amps[2,13]<-as.numeric(tally(OMZ%>% filter(Status =="Sequenced", Primary_Tax_Method=="16S", WGA_Approach=="WGA-X",
-                                                 Completeness>90, Contamination <5)))
+                                                 Completeness>90, Contamination <5,
+                                                 WGS_5S!=0, WGS_16S!=0, WGS_23S!=0, WGS_tRNA>=18)))
+
 colnames(OMZ_Amps)[13]<-"Number of High SAGs with SSU Amplicons"
 
 OMZ_Amps[1,14]<-as.numeric(tally(OMZ%>% filter(Status=="Sequenced", Primary_Tax_Method=="WGS", WGA_Approach=="MDA", 
-                                                Completeness>90, Contamination <5)))
+                                                Completeness>90, Contamination <5,
+                                                WGS_5S!=0, WGS_16S!=0, WGS_23S!=0, WGS_tRNA>=18)))
 
 OMZ_Amps[2,14]<-as.numeric(tally(OMZ%>% filter(Status =="Sequenced", Primary_Tax_Method=="WGS", WGA_Approach=="WGA-X",
-                                                 Completeness>90, Contamination <5)))
+                                                Completeness>90, Contamination <5,
+                                                WGS_5S!=0, WGS_16S!=0, WGS_23S!=0, WGS_tRNA>=18)))
 colnames(OMZ_Amps)[14]<-"Number of High QUality SAGs with  with WGS SSU"
 
 
@@ -1105,9 +1120,9 @@ Sort_Counts<-c(tally(OMZ %>% filter (Sorting_Method=="DNA")),
 
 names(Sort_Counts)<-c("DNA", "Pre-sort CHL", "CHL", "PHYCO")
 
-write_csv(OMZ_Trim, file  = "Outputs/Table_1_Summary_Table_Sites_Dec_07_2022.csv")
-write_csv(OMZ_Counts, file= "Outputs/Table_For_Fig2_Summary_Table_Primary_Tax_Dec_07_2022.csv")
-write_csv(OMZ_Amps, file= "Outputs/Table_S2_Summary_Table_WGA_Approach_Dec_07_2022.csv")
-write.csv(OMZ_Class_Out, file = "Outputs/Table_S3_QA_QC_Summary_Dec_07_2022.csv")
-write.csv(Sort_Counts, file = "Outputs/Table_For_Fig2_Sorting_Counts_Dec_07_2022.csv")
+write_csv(OMZ_Trim, file  = "Outputs/Table_1_Summary_Table_Sites_Mar_21_2023.csv")
+write_csv(OMZ_Counts, file= "Outputs/Table_For_Fig2_Summary_Table_Primary_Tax_Mar_21_2023.csv")
+write_csv(OMZ_Amps, file= "Outputs/Table_S2_Summary_Table_WGA_Approach_Mar_21_2023.csv")
+write.csv(OMZ_Class_Out, file = "Outputs/Table_S3_QA_QC_Summary_Mar_21_2023.csv")
+write.csv(Sort_Counts, file = "Outputs/Table_For_Fig2_Sorting_Counts_Mar_21_2023.csv")
 ```
