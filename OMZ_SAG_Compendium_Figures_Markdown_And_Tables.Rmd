@@ -1010,6 +1010,12 @@ write_csv(OMZ_Amps, file= "Outputs/Table_S2_Summary_Table_WGA_Approach_Mar_21_20
 write.csv(OMZ_Class_Out, file = "Outputs/Table_S3_QA_QC_Summary_Mar_21_2023.csv")
 write.csv(Sort_Counts, file = "Outputs/Table_For_Fig2_Sorting_Counts_Mar_21_2023.csv")
 
+OMZ_Quality_Score<-OMZ %>% filter (Status=="Sequenced") %>% 
+  select(Sample_ID, Completeness, Contamination, WGS_5S, WGS_16S, WGS_23S, WGS_tRNA) %>% 
+  mutate(Quality_Classification= ifelse(Completeness >90 & Contamination <5 & WGS_5S !=0 & WGS_16S!=0 & WGS_23S!=0 & WGS_tRNA>=18, "High",
+           ifelse(Completeness>=50 & Contamination <10, "Medium", "Low")))
+
+write_csv(OMZ_Quality_Score, file = "Outputs/QUality_Scores_For_Table_S1_Mar_21_2023.csv")
 
 
 ```
